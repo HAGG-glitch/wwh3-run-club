@@ -1,0 +1,9 @@
+# robots.txt for the West West Hash House Harriers website.
+#
+# NOTE: `Sitemap:` is intentionally omitted. The production domain has not been
+# confirmed yet, and publishing a sitemap against a guessed domain would be
+# worse than publishing none. Add the sitemap line once the domain is settled.
+# See CONTENT_NEEDED.md.
+
+User-agent: *
+Allow: /

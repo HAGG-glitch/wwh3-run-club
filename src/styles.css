@@ -1,0 +1,429 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ==========================================================================
+   WWH3 design tokens
+   Brand palette confirmed by the club. Gold is an accent only — surfaces stay
+   dark athletic ink and warm off-white so the photography leads.
+   ========================================================================== */
+
+@theme {
+  /* Brand */
+  --color-gold: #d7a63f;
+  --color-gold-bright: #efbd4f;
+  --color-ink: #17191d;
+  --color-charcoal: #24272c;
+  --color-warm-white: #f7f6f2;
+  --color-soft-sand: #ece9df;
+  --color-muted-gray: #6f706c;
+  --color-pure-white: #ffffff;
+
+  /* Deepened gold for text on light surfaces (contrast on --color-warm-white) */
+  --color-gold-deep: #8a620f;
+
+  /* Typography */
+  --font-display: "Arial Narrow", "Helvetica Neue Condensed", Impact, Haettenschweiler,
+    "Franklin Gothic Bold", Arial, sans-serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+
+  /* Editorial motion curves */
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Keyframes not expressible as a single Tailwind utility */
+  --animate-trail-march: trail-march 1.5s linear infinite;
+  --animate-onon-drift: onon-drift 14s ease-in-out infinite alternate;
+
+  /* Required by the Radix Accordion primitive (data-open / data-closed) */
+  --animate-accordion-down: accordion-down 220ms var(--ease-editorial);
+  --animate-accordion-up: accordion-up 200ms var(--ease-editorial);
+
+  /* Cinematic hero photograph settling into place */
+  --animate-hero-image-in: hero-image-in 1.5s cubic-bezier(0.2, 0.72, 0.2, 1) both;
+}
+
+@keyframes hero-image-in {
+  from {
+    opacity: 0.45;
+    transform: scale(1.09);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+@keyframes trail-march {
+  to {
+    background-position: 24px 0;
+  }
+}
+
+@keyframes onon-drift {
+  from {
+    transform: translate3d(-53%, 0, 0);
+  }
+  to {
+    transform: translate3d(-47%, 0, 0);
+  }
+}
+
+/* ==========================================================================
+   shadcn/ui theme bridge — maps brand tokens onto the primitive variables
+   ========================================================================== */
+
+:root {
+  --radius: 0.25rem;
+
+  --background: #f7f6f2;
+  --foreground: #17191d;
+  --card: #ffffff;
+  --card-foreground: #17191d;
+  --popover: #ffffff;
+  --popover-foreground: #17191d;
+  --primary: #17191d;
+  --primary-foreground: #f7f6f2;
+  --secondary: #ece9df;
+  --secondary-foreground: #17191d;
+  --muted: #ece9df;
+  --muted-foreground: #5c5d59;
+  --accent: #efbd4f;
+  --accent-foreground: #17191d;
+  --destructive: #b42318;
+  --destructive-foreground: #ffffff;
+  --success: #1f6f43;
+  --border: color-mix(in srgb, #17191d 16%, transparent);
+  --input: color-mix(in srgb, #17191d 22%, transparent);
+  --ring: #8a620f;
+
+  --chart-1: #d7a63f;
+  --chart-2: #8a620f;
+  --chart-3: #efbd4f;
+  --chart-4: #24272c;
+  --chart-5: #6f706c;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Offset sticky-header landings so anchored sections are never hidden. */
+    scroll-padding-top: 6.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-warm-white);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* The oversized hero words use tight tracking; guard the whole document
+       against a stray wide child creating a horizontal scrollbar. */
+    overflow-x: clip;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold-deep);
+    outline-offset: 2px;
+  }
+
+  /* Dark surfaces need a light focus ring to stay visible. */
+  .on-dark :focus-visible {
+    outline-color: var(--color-gold-bright);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+@utility editorial-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.91;
+  text-transform: uppercase;
+}
+
+/* The horizontal dashed "trail" that links the Hash steps together. */
+@utility trail-dashes {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--color-gold) 0 6px,
+    transparent 6px 12px
+  );
+  background-size: 24px 1px;
+  animation: var(--animate-trail-march);
+}
+
+/* --------------------------------------------------------------------------
+   The six Hash steps
+   Each step carries a different wayfinding motif so the list reads as a
+   progression rather than six identical rows. The dashes keep marching
+   throughout (that is the trail); what changes per step is the head of the
+   trail and the step marker beside it.
+   -------------------------------------------------------------------------- */
+
+/* The marching dashes themselves, for one Hash step. */
+.step-motif-trail {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--color-gold) 0 6px,
+    transparent 6px 12px
+  );
+  background-size: 24px 1px;
+  animation: var(--animate-trail-march);
+}
+
+/* The final step closes the trail with a Circle: a ring that fills. */
+.step-motif-circle {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  margin-top: -1px;
+  border: 1.5px solid var(--color-gold-deep);
+  border-radius: 999px;
+  animation: hash-circle-fill 3.6s var(--ease-editorial) infinite;
+}
+
+/* Step marker in the left-hand number column. */
+.step-motif::after {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: -1.15rem;
+  width: 5px;
+  height: 5px;
+  background: var(--color-gold-deep);
+  transform-origin: center;
+  opacity: 0;
+}
+
+/* 0 — the start: a single mark appearing, the trail being laid. */
+.step-motif[data-step-motif="0"]::after {
+  border-radius: 999px;
+  animation: hash-mark-bloom 4.2s var(--ease-editorial) infinite;
+}
+
+/* 1 — following: the mark travels along the trail. */
+.step-motif[data-step-motif="1"]::after {
+  border-radius: 999px;
+  animation: hash-mark-follow 4.2s linear infinite;
+}
+
+/* 2 — the check points: a tight blink, as if confirming a mark. */
+.step-motif[data-step-motif="2"]::after {
+  border-radius: 1px;
+  animation: hash-mark-confirm 4.2s steps(1, end) infinite;
+}
+
+/* 3 — false trails: the mark detours out and returns. */
+.step-motif[data-step-motif="3"]::after {
+  border-radius: 999px;
+  animation: hash-mark-detour 4.2s var(--ease-editorial) infinite;
+}
+
+/* 4 — the long trail: the mark stretches as it runs. */
+.step-motif[data-step-motif="4"]::after {
+  border-radius: 999px;
+  width: 5px;
+  animation: hash-mark-stretch 4.2s var(--ease-editorial) infinite;
+}
+
+/* 5 — the finish: the mark settles and pulses, the Circle closing. */
+.step-motif[data-step-motif="5"]::after {
+  border-radius: 999px;
+  animation: hash-mark-settle 4.2s var(--ease-editorial) infinite;
+}
+
+@keyframes hash-mark-bloom {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  18%,
+  62% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  80% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes hash-mark-follow {
+  0% {
+    opacity: 0;
+    transform: translateX(0) scale(0.7);
+  }
+  12% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  88% {
+    opacity: 1;
+    transform: translateX(1.1rem) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(1.35rem) scale(0.7);
+  }
+}
+
+@keyframes hash-mark-confirm {
+  0%,
+  20% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  30%,
+  45% {
+    opacity: 1;
+    transform: scale(1.35);
+  }
+  55%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes hash-mark-detour {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translate(0, 0) scale(1);
+  }
+  28% {
+    opacity: 1;
+    transform: translate(-0.4rem, 0.25rem) scale(1.1);
+  }
+  52% {
+    opacity: 0.6;
+    transform: translate(0.2rem, -0.15rem) scale(0.9);
+  }
+  74% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes hash-mark-stretch {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scaleX(1);
+  }
+  35% {
+    opacity: 1;
+    transform: scaleX(4.2);
+  }
+  70% {
+    opacity: 0.7;
+    transform: scaleX(2.2);
+  }
+}
+
+@keyframes hash-mark-settle {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+}
+
+@keyframes hash-circle-fill {
+  0%,
+  100% {
+    background-color: transparent;
+    transform: scale(0.85);
+  }
+  50% {
+    background-color: var(--color-gold);
+    transform: scale(1);
+  }
+}
+
+@utility oversize-hero-word {
+  font-size: clamp(2.75rem, 7.1vw, 8.4rem);
+  font-weight: 400;
+  letter-spacing: -0.065em;
+  line-height: 0.88;
+  /* Guarantees the three hero words can never force horizontal overflow. */
+  max-width: 100%;
+  overflow-wrap: normal;
+}
+
+/* ==========================================================================
+   Reduced motion
+   Only animation is removed. Scroll state, sticky header, dialogs, accordions
+   and focus management all keep working.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Animations are stripped above, which leaves each step marker sitting at the
+     end of its keyframes — some of which are `opacity: 0`. Pin them visible and
+     untransformed so the Hash steps keep their wayfinding cues when static. */
+  .step-motif::after {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .step-motif-circle {
+    background-color: var(--color-gold) !important;
+    transform: none !important;
+  }
+}
