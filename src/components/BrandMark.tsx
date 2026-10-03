@@ -59,7 +59,20 @@ type BrandLockupProps = {
   className?: string;
 };
 
-/** Logo plus the full club name. Used in the header, Sheet and footer. */
+/**
+ * Logo plus the club name. Used in the header, Sheet and footer.
+ *
+ * The club asked for the name spelled out in full next to the logo rather than
+ * the WWH3 abbreviation, so the lockup reads "West West / Hash House Harriers".
+ * It is split across two lines by the `<br />` for legibility and to keep the
+ * header from growing — the full name on a single line is wide enough to crowd
+ * the nav on a 1024px screen.
+ *
+ * The two lines sit inside sibling spans with an explicit space between them.
+ * A bare `<br />` would render correctly but leave no space in `textContent`,
+ * so anything reading the element as a string — an accessible name, a test, a
+ * search index — would see "West WestHash House Harriers" run together.
+ */
 export function BrandLockup({
   tone = "dark",
   markOnly,
@@ -73,13 +86,19 @@ export function BrandLockup({
       {!markOnly && (
         <span
           className={cn(
-            "text-[0.7rem] leading-[1.1] font-black tracking-[0.05em] uppercase",
+            /* Slightly smaller below `sm`. Spelled out in full, the name plus
+               the logo and a 44px menu button would not fit a 360px viewport at
+               the desktop size. `sm` is where the desktop breakpoint lands, so
+               this never changes the desktop or tablet appearance. */
+            "text-[0.62rem] leading-[1.1] font-black tracking-[0.04em] uppercase sm:text-[0.7rem] sm:tracking-[0.05em]",
             isDarkSurface ? "text-warm-white" : "text-ink",
           )}
         >
-          {siteConfig.identity.abbreviation}
-          <br />
-          Hash House Harriers
+          <span>{siteConfig.identity.nameParts.first}</span>{" "}
+          <span>
+            <br />
+            {siteConfig.identity.nameParts.rest}
+          </span>
         </span>
       )}
     </span>

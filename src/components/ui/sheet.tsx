@@ -70,12 +70,14 @@ function SheetContent({
           <SheetPrimitive.Close data-slot="sheet-close" asChild>
             <Button
               variant="ghost"
-              className="absolute top-3 right-3"
-              size="icon-sm"
+              /* Overrides the `icon-sm` default (size-7 = 28px), which is below
+                 the 44px minimum touch target. A sheet is a touch-only surface,
+                 so this is the one place the default is not safe. */
+              className="absolute top-3 right-3 size-11 text-ink hover:bg-gold-bright/20 hover:text-gold-deep"
+              size="icon"
             >
-              <XIcon
-              />
-              <span className="sr-only">Close</span>
+              <XIcon aria-hidden="true" />
+              <span className="sr-only">Close navigation menu</span>
             </Button>
           </SheetPrimitive.Close>
         )}

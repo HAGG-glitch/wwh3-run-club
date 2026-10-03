@@ -1,6 +1,59 @@
+# Dependencies
 node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Build output
 dist/
+dist-ssr/
+build/
+*.local
+
+# Vite
+.vite/
+vite.config.*.timestamp-*
+
+# Caches
+.cache/
+.temp/
+.tmp/
+*.tsbuildinfo
+
+# Environment — never commit real values
 .env
 .env.*
+!.env.example
+
+# Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Test / tooling output
+coverage/
+.nyc_output/
+.playwright/
+test-results/
+playwright-report/
+
+# Deployment
+.vercel/
+.netlify/
+.wrangler/
+
+# OS cruft
 .DS_Store
+Thumbs.db
+desktop.ini

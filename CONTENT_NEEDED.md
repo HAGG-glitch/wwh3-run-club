@@ -227,7 +227,7 @@ club's current base is never blurred together with plans for future expansion.
 | Item | Status | Where it is used |
 | --- | --- | --- |
 | Production domain name | **Missing** | Canonical URL, `og:url`, sitemap (see `public/robots.txt`) |
-| Social media URLs | **Missing** | `src/data/siteConfig.ts` → `social` (intentionally empty) |
+| Social media URLs | **Supplied** | `src/data/siteConfig.ts` → `social`: Facebook, Instagram, TikTok |
 | Current office / meeting venue details | Partial | `siteConfig.contact.address` is the confirmed correspondence address |
 | Membership fee amounts | Missing | `membershipSteps` step 05 says "applicable fees" only |
 | Charity / community work | Missing | `pillars` Relief pillar is generic |

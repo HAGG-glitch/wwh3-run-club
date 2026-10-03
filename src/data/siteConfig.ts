@@ -20,7 +20,7 @@ export type SocialLink = {
   label: string;
   href: string;
   /** Lucide icon name resolved in `SiteFooter`. */
-  icon: "facebook" | "instagram" | "whatsapp" | "mail" | "phone";
+  icon: "facebook" | "instagram" | "whatsapp" | "mail" | "phone" | "tiktok";
 };
 
 export type Registration = {
@@ -33,6 +33,19 @@ export type Registration = {
 export const siteConfig = {
   identity: {
     name: "West West Hash House Harriers",
+    /**
+     * The full name split for the logo lockup.
+     *
+     * The club asked for the name spelled out beside the logo rather than the
+     * WWH3 abbreviation, so it is broken after "West West" to keep the header
+     * compact. The `<br />` in `BrandLockup` is a real line break, so the words
+     * are still read in order. `name` stays the single-string form for
+     * `document.title`, `aria-label` and structured data.
+     */
+    nameParts: {
+      first: "West West",
+      rest: "Hash House Harriers",
+    },
     abbreviation: "WWH3",
     type: "Men's non-competitive social Hash running fellowship",
     location: "Western Area, Freetown, Sierra Leone",
@@ -54,8 +67,8 @@ export const siteConfig = {
 
   about: {
     paragraphs: [
-      "West West Hash House Harriers is a men's Hash kennel based in the Western Area of Freetown, Sierra Leone. Established on 16 July 2026 by seven founding members, WWH3 brings men together through non-competitive running, walking, adventure, humour and fellowship.",
-      "WWH3 was established with the approval and support of its mother Kennel, Freetown Hash House Harriers, while remaining an autonomous fellowship governed by its own Constitution.",
+      "WWH3 was founded on 16 July 2026 by seven members and received official approval and acceptance from its mother kennel, the Freetown Hash House Harriers (FH3), with recognition from a sister kennel, the Sierra Hash House Harriers and Harriettes (SH4). It is dedicated to promoting fitness, fellowship, discipline and brotherhood among men.",
+      "WWH3 remains an autonomous fellowship governed by its own Constitution, while carrying the approval and support of its mother kennel, Freetown Hash House Harriers.",
       "Its name reflects its roots in western Freetown. Regular Hash runs are held fortnightly on Fridays, with additional Friday and special runs announced when required. Walkers and runners of different abilities are welcome, and no member of the Pack should be left behind.",
     ] as const,
   },
@@ -67,11 +80,11 @@ export const siteConfig = {
     "To bring men together through running, adventure, humour and fellowship, creating a welcoming brotherhood where members build lasting friendships, stay active, explore new places and enjoy the unique spirit of hashing.",
 
   contact: {
-    address: "New England Ville, Freetown, Sierra Leone",
+    address: "C/O IPCB Office, New England Ville, Freetown, Sierra Leone",
     email: "westwesth3@gmail.com",
-    telephoneDisplay: "+232 31 251240",
+    telephoneDisplay: "+232 75 181352",
     /** E.164 form — safe to hand to a tel: link. */
-    telephoneHref: "tel:+23231251240",
+    telephoneHref: "tel:+23275181352",
     emailHref: "mailto:westwesth3@gmail.com",
   },
 
@@ -83,10 +96,26 @@ export const siteConfig = {
   } satisfies Registration,
 
   /**
-   * Social channels are intentionally empty: no URL has been confirmed by the
-   * club. The footer hides any channel without an href rather than linking "#".
+   * Social channels supplied and confirmed by the club. The footer hides any
+   * channel without an href rather than rendering a dead `#` link.
    */
-  social: [] as SocialLink[],
+  social: [
+    {
+      label: "Facebook",
+      href: "https://www.facebook.com/profile.php?id=61593822987247",
+      icon: "facebook",
+    },
+    {
+      label: "Instagram",
+      href: "https://www.instagram.com/westwest_hash/",
+      icon: "instagram",
+    },
+    {
+      label: "TikTok",
+      href: "https://www.tiktok.com/@west.west.hash.ho",
+      icon: "tiktok",
+    },
+  ] as SocialLink[],
 } as const;
 
 /** Section ids used by in-page navigation. Keep in sync with the homepage. */

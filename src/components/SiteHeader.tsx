@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ArrowRight, Menu } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import { BrandLockup } from "@/components/BrandMark";
+import { MenuMark } from "@/components/MenuMark";
 import { NavDropdown } from "@/components/NavDropdown";
 import { ScrollProgress } from "@/components/motion/ScrollProgress";
 import { Button } from "@/components/ui/button";
@@ -126,10 +127,17 @@ export function SiteHeader() {
         data-testid="site-header"
         data-scrolled={scrolled}
         className={cn(
-          "sticky top-0 z-50 grid items-center gap-x-6 border-b border-ink/15 bg-warm-white/95 px-5 backdrop-blur-md transition-[height,box-shadow,background-color] duration-300 lg:grid-cols-[1fr_auto_1fr] lg:px-[4vw] xl:gap-x-10",
+          /* Two columns below `lg` so the lockup and the menu button share one
+             row. Without `grid-cols` here the grid auto-places children into
+             separate rows, which put the burger in a second row that overflowed
+             the fixed header height and sat on top of the page content. */
+          "sticky top-0 z-50 grid grid-cols-[1fr_auto] items-center gap-x-4 border-b border-ink/15 bg-warm-white/95 px-4 backdrop-blur-md transition-[height,box-shadow,background-color] duration-300 sm:gap-x-5 sm:px-5 lg:grid-cols-[1fr_auto_1fr] lg:gap-x-6 lg:px-[4vw] xl:gap-x-10",
+          /* The height shrink is desktop-only. On mobile it nudged the lockup
+             and the button up 4px on every scroll, which read as the header
+             visibly jumping while the page moved. */
           scrolled
-            ? "h-[72px] shadow-[0_12px_35px_rgba(23,25,29,0.08)]"
-            : "h-[76px] lg:h-[86px]",
+            ? "h-[72px] shadow-[0_12px_35px_rgba(23,25,29,0.08)] lg:h-[72px]"
+            : "h-[72px] lg:h-[86px]",
         )}
       >
         <Link
@@ -174,18 +182,18 @@ export function SiteHeader() {
               variant="outline"
               size="icon"
               aria-label="Open navigation menu"
-              className="size-11 justify-self-end rounded-sm border-ink/20 bg-transparent text-ink lg:hidden"
+              className="group size-11 justify-self-end rounded-sm border-ink/25 bg-warm-white/60 text-ink transition-colors hover:border-gold-deep hover:bg-gold-bright/20 hover:text-gold-deep active:bg-gold-bright/35 lg:hidden"
             >
-              <Menu aria-hidden="true" />
+              <MenuMark />
             </Button>
           </SheetTrigger>
 
           <SheetContent
             side="right"
-            className="w-[88vw] max-w-sm gap-0 border-l border-ink/15 bg-warm-white p-0 text-ink sm:max-w-sm"
+            className="w-[86vw] max-w-sm gap-0 border-l border-ink/15 bg-warm-white p-0 text-ink sm:max-w-sm"
             data-testid="mobile-nav"
           >
-            <SheetHeader className="border-b border-ink/15 p-6 pr-14">
+            <SheetHeader className="border-b border-ink/15 p-5 pr-14">
               <SheetTitle className="sr-only">Site navigation</SheetTitle>
               <SheetDescription className="sr-only">
                 Navigate between the sections of the {siteConfig.identity.name}{" "}
@@ -196,12 +204,12 @@ export function SiteHeader() {
 
             <nav
               aria-label="Mobile"
-              className="flex flex-col overflow-y-auto px-6 py-2"
+              className="flex flex-col overflow-y-auto px-5 py-1"
             >
               {primaryNav.map((entry) => renderEntry(entry, "sheet"))}
             </nav>
 
-            <div className="px-6 py-6">
+            <div className="px-5 py-5">
               <Button
                 asChild
                 className="h-auto w-full justify-between rounded-sm bg-ink px-5 py-3.5 text-[0.76rem] font-extrabold tracking-[0.07em] text-warm-white uppercase hover:bg-gold-bright hover:text-ink"
@@ -213,7 +221,7 @@ export function SiteHeader() {
               </Button>
             </div>
 
-            <div className="mt-auto space-y-1 px-6 pt-4 pb-8 text-[0.78rem] text-muted-gray">
+            <div className="mt-auto space-y-1 px-5 pt-4 pb-7 text-[0.78rem] text-muted-gray">
               <Separator className="mb-4 bg-ink/15" />
               <p className="font-semibold">{siteConfig.contact.address}</p>
               <p>
