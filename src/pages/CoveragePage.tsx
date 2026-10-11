@@ -1,7 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { CircleCheck, MapPin, MapPinned, TriangleAlert } from "lucide-react";
 
-import { ConceptNotice } from "@/components/ConceptNotice";
 import { PageHero } from "@/components/PageHero";
 import { SectionSubnav } from "@/components/SectionSubnav";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -67,7 +66,6 @@ export function CoveragePage() {
   return (
     <main>
       <SiteHeader />
-      <ConceptNotice />
 
       <PageHero
         eyebrow="Membership · Coverage"

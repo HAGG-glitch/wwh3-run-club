@@ -201,6 +201,150 @@ export const pillars: readonly Pillar[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
+/* Constitution — Mandate, Objectives, Powers, Values                         */
+/* -------------------------------------------------------------------------- */
+
+export type GovernanceClause = {
+  /** Bold lead-in, used by the numbered Values clauses. */
+  title?: string;
+  text: string;
+};
+
+export type GovernanceSection = {
+  id: "mandate" | "objectives" | "powers" | "values";
+  title: string;
+  /** Sentence shown above the list; omitted when empty. */
+  intro: string;
+  /** Lettered (A, B, C) for the constitutional lists, numeric for Values. */
+  numbering: "alpha" | "numeric";
+  clauses: readonly GovernanceClause[];
+};
+
+/**
+ * Supplied verbatim by the club from its Constitution. Wording, ordering and
+ * lettering must not be edited — a change here is a change to the club's
+ * governing document, not an editorial one.
+ */
+export const governance: readonly GovernanceSection[] = [
+  {
+    id: "mandate",
+    title: "Mandate",
+    intro: "The West West Hash House Harriers is committed to:",
+    numbering: "alpha",
+    clauses: [
+      { text: "Organizing enjoyable, challenging, and memorable hash runs." },
+      {
+        text: "Promoting brotherhood, friendship, fitness, and personal well-being.",
+      },
+      {
+        text: "Welcoming men from diverse backgrounds in a spirit of respect and inclusion.",
+      },
+      {
+        text: "Encouraging good humour, creativity, adventure, and responsible fun.",
+      },
+      {
+        text: "Supporting the safety of hashers, local communities, and the environments in which we run.",
+      },
+      {
+        text: "Preserving and promoting the traditions and camaraderie of the Hash House Harriers.",
+      },
+      {
+        text: "Building a strong, active, and sustainable kennel for present and future members.",
+      },
+      {
+        text: "Undertaking occasional charitable and community activities in the name of the kennel.",
+      },
+      {
+        text: "Building partnerships with other organizations in the performance of its functions.",
+      },
+    ],
+  },
+  {
+    id: "objectives",
+    title: "Objectives",
+    intro: "",
+    numbering: "alpha",
+    clauses: [
+      {
+        text: "To organise regular hash runs, trails and social events for members and guests.",
+      },
+      {
+        text: "To promote physical fitness, mental wellbeing and camaraderie among men.",
+      },
+      {
+        text: "To uphold, teach and pass on the customs and traditions of the Hash House Harriers.",
+      },
+      {
+        text: "To foster friendly relations with other hash kennels in Sierra Leone and abroad.",
+      },
+      {
+        text: "To act safely and responsibly, and to respect the communities and environments in which we run.",
+      },
+      {
+        text: "To undertake occasional charitable and community activities in the name of the Kennel.",
+      },
+    ],
+  },
+  {
+    id: "powers",
+    title: "Powers",
+    intro:
+      "To further its objectives, the Kennel may do all lawful things, including:",
+    numbering: "alpha",
+    clauses: [
+      { text: "Open and operate bank accounts and hold funds." },
+      {
+        text: "Raise funds, receive donations and sponsorship consistent with its values.",
+      },
+      { text: "Acquire, hold, hire and dispose of equipment and property." },
+      { text: "Organise runs, events, camps and travels." },
+      { text: "Enter into agreements and engage suppliers and vendors." },
+      { text: "Produce, hold and sell regalia and merchandise." },
+      {
+        text: "Affiliate and cooperate with other kennels and other bodies or individuals, and make charitable donations.",
+      },
+      { text: "Undertake any other business that it deems fit and necessary." },
+    ],
+  },
+  {
+    id: "values",
+    title: "Values and the Spirit of the Hash",
+    intro: "",
+    numbering: "numeric",
+    clauses: [
+      {
+        title: "Non-competitive",
+        text: "the Hash is not a race. The last hasher home is as welcome as the first, and walkers are as valued as runners.",
+      },
+      {
+        title: "Humility and humour",
+        text: "hashers take the traditions of the Hash seriously and themselves not at all; good-natured teasing is part of the fun and is never a cover for malice.",
+      },
+      {
+        title: "Fellowship and inclusion",
+        text: "within its remit as a men’s kennel, the Hash welcomes men of good repute without regard to ethnicity, faith, nationality, background, profession or ability; no one is left behind on trial.",
+      },
+      {
+        title: "Responsibility and safety",
+        text: "enjoyment is always tempered by safety, moderation and respect for others, for the public, for land and business owners and for the environment.",
+      },
+      {
+        title: "Respect and dignity",
+        text: "harassment, bullying, discrimination and abuse have no place in the Kennel, on trial or in the Circle.",
+      },
+      {
+        title: "The five pillars of WWH3",
+        text: "are brotherly love, fitness, fellowship, truth, and relief—and the golden rule is that the traditions of the Hash exist for joy, never for cruelty.",
+      },
+      {
+        title: "No politics or religion",
+        text: "shall be promoted or debated in the Circle or on the trail; the Hash is a refuge from both.",
+      },
+    ],
+  },
+];
+
+/* -------------------------------------------------------------------------- */
 /* How a Hash runs                                                            */
 /* -------------------------------------------------------------------------- */
 

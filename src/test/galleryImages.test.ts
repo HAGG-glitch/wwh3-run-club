@@ -26,13 +26,14 @@ describe("gallery image files", () => {
   });
 
   it("keeps every club photograph under 600 KB on disk", () => {
-    /* The nine photographs were supplied as WhatsApp exports, one of which was
-       a 1.4MB 3840x5120 portrait — a nine-image grid would have shipped 3.3MB.
-       Oversized files are a page-weight problem, not a detail. */
+    /* The birthday-run frames arrived as ~500KB WhatsApp exports; the curated
+       set is resized to a 1600px maximum so the gallery stays light. Oversized
+       files are a page-weight problem, not a detail. */
     const clubPhotos = displayableGalleryItems.filter((item) =>
       item.image.startsWith("/gallery_photos/"),
     );
-    expect(clubPhotos.length).toBe(9);
+    expect(clubPhotos.length).toBe(galleryItems.length);
+    expect(clubPhotos.length).toBeGreaterThan(40);
 
     /* Vitest serves modules over an http-like URL, so `import.meta.url` is not
        a file path. Resolve from the Vite project root instead. */

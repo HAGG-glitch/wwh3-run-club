@@ -65,7 +65,7 @@ export function JoinForm() {
     <div className="border border-ink/15 bg-pure-white p-6 sm:p-9">
       <div className="mb-7">
         <h3 className="m-0 text-lg font-black tracking-[0.04em] text-ink uppercase">
-          Join the Next Hash
+          Join the Next Trail
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-muted-gray">
           This form opens a pre-filled email in your own mail app addressed to{" "}

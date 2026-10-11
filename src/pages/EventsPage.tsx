@@ -1,7 +1,6 @@
-import { useLocation } from "react-router-dom";
-import { CalendarDays } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { ArrowRight, CalendarDays } from "lucide-react";
 
-import { ConceptNotice } from "@/components/ConceptNotice";
 import { EmptyState, PageHero } from "@/components/PageHero";
 import { SectionSubnav } from "@/components/SectionSubnav";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -18,12 +17,15 @@ import {
   type ClubEvent,
 } from "@/data/events";
 import { gallerySections } from "@/data/navigation";
+import { getRunBySlug } from "@/data/runs";
 import { sectionIds, siteConfig } from "@/data/siteConfig";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { demoLabels } from "@/lib/demoLabels";
 
 /** One event card. Renders a registration link only when one exists. */
 function EventCard({ event }: { event: ClubEvent }) {
+  const run = event.runSlug ? getRunBySlug(event.runSlug) : undefined;
+
   return (
     <article className="flex h-full flex-col border border-ink/15 bg-pure-white">
       {event.coverImage ? (
@@ -79,6 +81,32 @@ function EventCard({ event }: { event: ClubEvent }) {
           {event.description}
         </p>
 
+        {run && run.galleryImages.length > 0 ? (
+          <div className="mt-5 grid grid-cols-3 gap-2">
+            {run.galleryImages.map((image) => (
+              <img
+                key={image}
+                src={image}
+                alt=""
+                loading="lazy"
+                className="h-20 w-full object-cover"
+              />
+            ))}
+          </div>
+        ) : null}
+
+        {run ? (
+          <Button
+            asChild
+            className="mt-5 h-auto w-full justify-center rounded-sm bg-ink py-3.5 text-[0.74rem] font-black tracking-[0.08em] text-warm-white uppercase hover:bg-charcoal"
+          >
+            <Link to={`/runs/${run.slug}`}>
+              View the photographs
+              <ArrowRight aria-hidden="true" />
+            </Link>
+          </Button>
+        ) : null}
+
         {event.registrationLink ? (
           <Button
             asChild
@@ -116,7 +144,6 @@ export function EventsPage() {
   return (
     <main>
       <SiteHeader />
-      <ConceptNotice />
 
       <PageHero
         eyebrow="Gallery · Events"

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Camera, Expand } from "lucide-react";
 
-import { ConceptNotice } from "@/components/ConceptNotice";
 import { EmptyState, PageHero } from "@/components/PageHero";
 import { SectionSubnav } from "@/components/SectionSubnav";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -28,7 +27,6 @@ import {
 import {
   displayableGalleryItems,
   featuredGalleryItems,
-  hasApprovedPhotography,
   type GalleryItem,
 } from "@/data/gallery";
 import { gallerySections } from "@/data/navigation";
@@ -98,7 +96,6 @@ export function PhotosPage() {
   return (
     <main>
       <SiteHeader />
-      <ConceptNotice />
 
       <PageHero
         eyebrow="Gallery · Photos"
@@ -128,18 +125,10 @@ export function PhotosPage() {
               <h2 className="m-0 text-[0.7rem] font-black tracking-[0.14em] uppercase">
                 Life in the Pack
               </h2>
-              {!hasApprovedPhotography && (
-                <Badge
-                  data-testid="placeholder-gallery-badge"
-                  className="rounded-sm border-0 bg-gold-bright font-black tracking-[0.09em] text-ink uppercase"
-                >
-                  Placeholder gallery
-                </Badge>
-              )}
             </div>
             <p className="m-0 max-w-xl leading-relaxed text-muted-gray">
-              Photographs below were taken by club members and used with the
-              consent of everyone shown. Captions are still being added.
+              Photographs were taken by club members and used with the consent of
+              everyone shown.
             </p>
           </div>
         </Reveal>

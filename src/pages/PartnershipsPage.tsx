@@ -1,7 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { Handshake, Plus } from "lucide-react";
 
-import { ConceptNotice } from "@/components/ConceptNotice";
 import { EmptyState, PageHero } from "@/components/PageHero";
 import { SectionSubnav } from "@/components/SectionSubnav";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -98,7 +97,6 @@ export function PartnershipsPage() {
   return (
     <main>
       <SiteHeader />
-      <ConceptNotice />
 
       <PageHero
         eyebrow="Membership · Partnerships"

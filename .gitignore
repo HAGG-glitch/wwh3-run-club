@@ -53,6 +53,11 @@ playwright-report/
 .netlify/
 .wrangler/
 
+# Full-resolution source photographs. The web-ready copies live in
+# `public/gallery_photos`; the raw exports are kept locally but not committed
+# or deployed, because they run to well over 100MB.
+source-photos/
+
 # OS cruft
 .DS_Store
 Thumbs.db

@@ -1,11 +1,10 @@
 /**
  * The three disclosure labels required for demonstration material.
  *
- * The club has not yet supplied confirmed run records or approved photography,
- * so nothing in `runs.ts` or `gallery.ts` may be presented as official
- * information. These strings live in one place so every surface that renders
- * demo material uses identical wording, and so the test suite can assert the
- * same guarantees the design brief asks for.
+ * The club has now supplied a confirmed run record and approved photography, so
+ * nothing in `runs.ts` or `gallery.ts` is demo material any more. These strings
+ * remain because the surrounding pages still guard their `isDemo` branches with
+ * them, keeping those branches self-documenting if sample content is ever added.
  */
 export const demoLabels = {
   /** A run entry that is an example rather than a club record. */

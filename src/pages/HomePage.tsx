@@ -12,7 +12,6 @@ import {
   Phone,
 } from "lucide-react";
 
-import { ConceptNotice } from "@/components/ConceptNotice";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { JoinForm } from "@/components/JoinForm";
@@ -44,6 +43,7 @@ import {
 import {
   clubStats,
   conductStandards,
+  governance,
   hashSteps,
   nextHashPending,
   pillars,
@@ -75,13 +75,22 @@ function Hero() {
       className="on-dark relative isolate flex min-h-[min(820px,calc(100vh-120px))] flex-col overflow-hidden bg-[#0d151d] text-warm-white"
     >
       <img
-        src="/wwh3-hero.webp"
-        alt="Placeholder photograph of a running group on a hillside above Freetown"
+        src="/wwh3-hero.jpg"
+        alt="Members of the West West Hash House Harriers gathered at the Run Away Boy's Birthday Hash."
         className="absolute inset-0 -z-2 size-full object-cover object-[center_48%] contrast-[1.05] saturate-[.84] motion-safe:animate-hero-image-in"
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-1 bg-[linear-gradient(90deg,rgba(5,12,18,.72),rgba(5,12,18,.18)_48%,rgba(5,12,18,.56)),linear-gradient(0deg,rgba(5,10,14,.8),transparent_55%,rgba(5,10,14,.25))]"
+        className="pointer-events-none absolute inset-0 -z-1 bg-[linear-gradient(90deg,rgba(5,12,18,.72),rgba(5,12,18,.18)_48%,rgba(5,12,18,.56)),linear-gradient(0deg,rgba(5,10,14,.8),transparent_55%,rgba(5,10,14,.25))]"
+      />
+
+      {/* The whole banner is one link into the gallery, so the pointer stays a
+          single consistent hand across it. The action row below sits above this
+          overlay and keeps its own buttons working. */}
+      <Link
+        to="/gallery"
+        aria-label="Open the photo gallery"
+        className="absolute inset-0 z-[1] rounded-sm focus-visible:ring-2 focus-visible:ring-gold-bright focus-visible:outline-none focus-visible:ring-inset"
       />
 
       <div className="px-5 pt-6 sm:px-[7vw] sm:pt-10">
@@ -134,7 +143,7 @@ function Hero() {
         ))}
       </h1>
 
-      <div className="px-5 pb-8 sm:px-[4vw]">
+      <div className="relative z-[2] px-5 pb-8 sm:px-[4vw]">
         <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
           <Button
             asChild
@@ -142,7 +151,7 @@ function Hero() {
             className="h-auto rounded-sm bg-gold-bright px-6 py-4 text-[0.78rem] font-black tracking-[0.08em] text-ink uppercase hover:bg-ink hover:text-warm-white"
           >
             <Link to={`/#${sectionIds.membership}`}>
-              Join the Next Hash
+              Join the Next Trail
               <ArrowDownRight aria-hidden="true" />
             </Link>
           </Button>
@@ -229,6 +238,45 @@ function AboutSection() {
                 </p>
               </div>
             </div>
+            <div className="mt-8 space-y-8 border-t border-ink/15 pt-8">
+                {governance.map((section) => (
+                  <section
+                    key={section.id}
+                    aria-labelledby={`governance-${section.id}`}
+                  >
+                    <h3
+                      id={`governance-${section.id}`}
+                      className="m-0 text-[0.78rem] font-black tracking-[0.12em] text-ink uppercase"
+                    >
+                      {section.title}
+                    </h3>
+                    {section.intro && (
+                      <p className="mt-2 mb-0 text-sm leading-relaxed text-muted-gray">
+                        {section.intro}
+                      </p>
+                    )}
+                    <ol
+                      className={cn(
+                        "mt-4 mb-0 space-y-2 pl-6 text-sm leading-relaxed text-muted-gray",
+                        section.numbering === "numeric"
+                          ? "list-decimal"
+                          : "list-[upper-alpha]",
+                      )}
+                    >
+                      {section.clauses.map((clause) => (
+                        <li key={clause.text.slice(0, 24)}>
+                          {clause.title && (
+                            <strong className="text-ink">
+                              {clause.title}:{" "}
+                            </strong>
+                          )}
+                          {clause.text}
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+                ))}
+              </div>
           </div>
         </div>
       </Reveal>
@@ -955,7 +1003,6 @@ export function HomePage() {
   return (
     <main>
       <SiteHeader />
-      <ConceptNotice />
 
       <Hero />
       <AboutSection />

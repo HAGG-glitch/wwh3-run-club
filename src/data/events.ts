@@ -5,9 +5,8 @@
  * optional except the identity fields, so a partially filled record can never
  * become a page-breaking error.
  *
- * There are currently **no confirmed events**. `publishedEvents` is therefore
- * empty and the Events page shows an honest empty state. Nothing is invented
- * here — see CONTENT_NEEDED.md.
+ * One real event exists: the club's first recorded run. When an event points at
+ * a run via `runSlug`, the Events page links through to that run's photographs.
  */
 
 export type EventStatus = "draft" | "scheduled" | "completed" | "cancelled";
@@ -29,6 +28,11 @@ export type ClubEvent = {
   /** External registration URL. Null means no registration is offered. */
   registrationLink: string | null;
   /**
+   * Slug of the run this event documents, when one exists. Lets the event link
+   * through to the run's photographs instead of duplicating them here.
+   */
+  runSlug: string | null;
+  /**
    * Publication gate. An event is only listed publicly when this is true, which
    * keeps draft or cancelled records off the public site.
    */
@@ -37,8 +41,25 @@ export type ClubEvent = {
   isDemo: boolean;
 };
 
-/** Source records. Empty until the club confirms real events. */
-export const allEvents: readonly ClubEvent[] = [];
+/** Source records. Only confirmed club events belong here. */
+export const allEvents: readonly ClubEvent[] = [
+  {
+    id: "run-away-boy-birthday",
+    slug: "run-away-boy-birthday",
+    title: "Run Away Boy's Birthday Hash",
+    date: "2 October 2026",
+    time: null,
+    location: "Oba Funkia, Funkia Market",
+    description:
+      "The club's first recorded run, a loop from Oba Funkia around Funkia Market and back, held on 2 October 2026 to mark Run Away Boy's birthday.",
+    coverImage: "/gallery_photos/run-away-boy-birthday/wwh3-bday-03.jpg",
+    status: "completed",
+    registrationLink: null,
+    runSlug: "run-away-boy-birthday",
+    published: true,
+    isDemo: false,
+  },
+];
 
 /** Records safe to show on the public site. */
 export const publishedEvents: readonly ClubEvent[] = allEvents.filter(

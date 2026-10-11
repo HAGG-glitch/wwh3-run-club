@@ -90,10 +90,6 @@ describe("publication gates", () => {
 });
 
 describe("current data is unapproved", () => {
-  it("has no confirmed events", () => {
-    expect(allEvents).toHaveLength(0);
-  });
-
   it("has no publications, so no document can be exposed", () => {
     expect(hasPublicPublications).toBe(false);
   });
@@ -112,27 +108,26 @@ describe("current data is unapproved", () => {
 });
 
 describe("empty states", () => {
-  it("states plainly that no events are published", async () => {
+  it("lists the club's first recorded run under Events", async () => {
     renderWithRouter(<App />, { initialEntries: ["/gallery/events"] });
 
     expect(
-      await screen.findByText(
-        /no published events are currently available\./i,
-      ),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        /contact wwh3 for information about upcoming activities\./i,
-      ),
+      await screen.findByRole("heading", {
+        name: /run away boy's birthday hash/i,
+      }),
     ).toBeInTheDocument();
   });
 
-  it("offers a contact route instead of a dead link", async () => {
+  it("links the event through to its photographs", async () => {
     renderWithRouter(<App />, { initialEntries: ["/gallery/events"] });
 
+    await screen.findByRole("heading", {
+      name: /run away boy's birthday hash/i,
+    });
+
     expect(
-      await screen.findByRole("link", { name: /contact wwh3/i }),
-    ).toHaveAttribute("href", expect.stringContaining("#"));
+      screen.getByRole("link", { name: /view the photographs/i }),
+    ).toHaveAttribute("href", "/runs/run-away-boy-birthday");
   });
 
   it("states that no public documents are available", async () => {

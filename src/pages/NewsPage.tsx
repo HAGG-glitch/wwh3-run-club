@@ -1,7 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { Newspaper } from "lucide-react";
 
-import { ConceptNotice } from "@/components/ConceptNotice";
 import { EmptyState, PageHero } from "@/components/PageHero";
 import { SectionSubnav } from "@/components/SectionSubnav";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -41,7 +40,6 @@ export function NewsPage() {
   return (
     <main>
       <SiteHeader />
-      <ConceptNotice />
 
       <PageHero
         eyebrow="Gallery · News"

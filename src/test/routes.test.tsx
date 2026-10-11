@@ -147,13 +147,14 @@ describe("routing behaviour", () => {
     expect(getPath()).toBe("/");
   });
 
-  it("keeps every page's concept disclosure", async () => {
+  it("shows no concept notice on any route", async () => {
     for (const route of allRoutes) {
       const { unmount } = renderWithRouter(<App />, {
         initialEntries: [route],
       });
 
-      expect(await screen.findByText(/concept preview/i)).toBeInTheDocument();
+      await screen.findByRole("heading", { level: 1 });
+      expect(screen.queryByText(/concept preview/i)).not.toBeInTheDocument();
       unmount();
     }
   });

@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
-import { ConceptNotice } from "@/components/ConceptNotice";
 import { PageHero } from "@/components/PageHero";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -29,7 +28,6 @@ export function GalleryPage() {
   return (
     <main>
       <SiteHeader />
-      <ConceptNotice />
 
       <PageHero
         eyebrow="The gallery"

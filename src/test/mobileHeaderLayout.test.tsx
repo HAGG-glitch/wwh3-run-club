@@ -168,6 +168,8 @@ describe("mobile navigation panel", () => {
 
 describe("brand lockup at mobile widths", () => {
   it("steps the name down below sm so it fits beside the menu button", () => {
+    renderWithRouter(<SiteHeader />);
+
     /* Spelled out in full, the name plus the logo and a 44px button overflowed
        a 360px viewport at the desktop size. The name is the flexible part. */
     const lockup = Array.from(

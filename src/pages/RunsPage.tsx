@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, ArrowUpRight, CalendarDays, MapPin } from "lucide-react";
 
-import { ConceptNotice } from "@/components/ConceptNotice";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Reveal } from "@/components/motion/Reveal";
@@ -26,7 +25,6 @@ export function RunsPage() {
   return (
     <main>
       <SiteHeader />
-      <ConceptNotice />
 
       <section className="on-dark relative flex min-h-[32rem] items-center overflow-hidden bg-ink px-5 py-16 text-warm-white sm:px-[7vw]">
         <span
@@ -81,7 +79,7 @@ export function RunsPage() {
         <StaggerGroup as="ul" className="m-0 list-none border-t border-ink/15 p-0">
           {publishedRuns.map((run) => (
             <StaggerItem key={run.id} as="li">
-              <Card className="group rounded-sm border-0 border-b border-ink/15 bg-transparent shadow-none">
+              <Card className="group relative rounded-sm border-0 border-b border-ink/15 bg-transparent shadow-none">
                 <CardContent className="grid items-center gap-6 p-0 sm:grid-cols-[11rem_4rem_1fr_0.8fr_1.5rem] sm:gap-7">
                   <div className="relative h-28 overflow-hidden bg-charcoal sm:h-30">
                     <img
@@ -118,7 +116,7 @@ export function RunsPage() {
                     <h3 className="mt-1 mb-1.5 text-[1.15rem] uppercase">
                       <Link
                         to={`/runs/${run.slug}`}
-                        className="rounded-sm transition-colors hover:text-gold-deep"
+                        className="rounded-sm after:absolute after:inset-0 transition-colors hover:text-gold-deep"
                       >
                         {run.title}
                       </Link>

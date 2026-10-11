@@ -1,6 +1,7 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
+  ArrowRight,
   CalendarDays,
   Footprints,
   MapPin,
@@ -10,7 +11,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import { ConceptNotice } from "@/components/ConceptNotice";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Reveal } from "@/components/motion/Reveal";
@@ -55,10 +55,18 @@ export function RunStoryPage() {
 
   const stats = statCandidates.filter((stat): stat is RunStat => stat !== null);
 
+  /* Built from the fields this run actually has, so a real record with no
+     difficulty does not render a dangling separator. */
+  const kicker = [
+    run.hashNumber ? `Hash #${run.hashNumber}` : null,
+    run.difficulty,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
   return (
     <main>
       <SiteHeader />
-      <ConceptNotice />
 
       <section className="on-dark relative h-[26rem] overflow-hidden bg-ink text-warm-white sm:h-[42rem]">
         <img
@@ -94,7 +102,7 @@ export function RunStoryPage() {
             )}
           </div>
           <p className="m-0 mb-2 text-[0.75rem] font-black tracking-[0.12em] text-warm-white/75 uppercase">
-            Hash #{run.hashNumber} · {run.difficulty}
+            {kicker}
           </p>
           <h1 className="editorial-display m-0 max-w-4xl text-[clamp(2.5rem,8vw,8rem)]">
             {run.title}
@@ -174,22 +182,32 @@ export function RunStoryPage() {
           aria-label="Photographs from this run"
           className="bg-pure-white px-5 pb-20 sm:px-[7vw] sm:pb-28"
         >
-          <Separator className="mb-12 bg-ink/15" />
+          <Separator className="mb-8 bg-ink/15" />
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+            <h2 className="m-0 text-[0.7rem] font-black tracking-[0.14em] uppercase">
+              Photographs from this run
+            </h2>
+            <Link
+              to="/gallery/photos"
+              className="inline-flex items-center gap-2 border-b border-ink pb-1 text-[0.72rem] font-black tracking-[0.1em] uppercase transition-colors hover:border-gold-deep hover:text-gold-deep"
+            >
+              Open the full gallery
+              <ArrowRight aria-hidden="true" className="size-3.5" />
+            </Link>
+          </div>
           <StaggerGroup className="grid gap-5 sm:grid-cols-2">
             {run.galleryImages.map((image, index) => (
               <StaggerItem key={`${image}-${index}`} as="figure" className="m-0">
                 <img
                   src={image}
-                  alt={
-                    index === 0
-                      ? `${run.title} — ${demoLabels.photo}`
-                      : `${demoLabels.photo} from ${run.title}`
-                  }
+                  alt={`${run.title} — photograph ${index + 1}`}
                   loading="lazy"
                   className="h-[22rem] w-full object-cover sm:h-[28rem]"
                 />
                 <figcaption className="pt-3 text-[0.66rem] font-bold tracking-[0.08em] text-muted-gray uppercase">
-                  Placeholder image · replace with approved club photography
+                  {run.isDemo
+                    ? "Demo image · replace with approved club photography"
+                    : run.title}
                 </figcaption>
               </StaggerItem>
             ))}
