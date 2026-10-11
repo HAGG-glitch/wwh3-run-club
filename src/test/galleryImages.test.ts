@@ -25,10 +25,10 @@ describe("gallery image files", () => {
     }
   });
 
-  it("keeps every club photograph under 600 KB on disk", () => {
+  it("keeps every club photograph under 400 KB on disk", () => {
     /* The birthday-run frames arrived as ~500KB WhatsApp exports; the curated
-       set is resized to a 1600px maximum so the gallery stays light. Oversized
-       files are a page-weight problem, not a detail. */
+       set is resized to a 1280px maximum so the gallery stays light enough to
+       load on a phone. Oversized files are a page-weight problem, not a detail. */
     const clubPhotos = displayableGalleryItems.filter((item) =>
       item.image.startsWith("/gallery_photos/"),
     );
@@ -46,7 +46,7 @@ describe("gallery image files", () => {
       expect(
         size,
         `${item.image} is ${Math.round(size / 1024)}KB`,
-      ).toBeLessThan(600 * 1024);
+      ).toBeLessThan(400 * 1024);
     }
   });
 

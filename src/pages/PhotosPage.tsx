@@ -7,7 +7,6 @@ import { SectionSubnav } from "@/components/SectionSubnav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Reveal } from "@/components/motion/Reveal";
-import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -171,9 +170,9 @@ export function PhotosPage() {
 
         {/* Full gallery — each tile opens an enlarged Dialog. */}
         {displayableGalleryItems.length > 0 ? (
-          <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {displayableGalleryItems.map((item) => (
-              <StaggerItem key={item.id} as="figure" className="m-0">
+              <figure key={item.id} className="m-0">
                 <button
                   type="button"
                   onClick={() => setOpenItem(item)}
@@ -214,9 +213,9 @@ export function PhotosPage() {
                     </span>
                   </span>
                 </button>
-              </StaggerItem>
+              </figure>
             ))}
-          </StaggerGroup>
+          </div>
         ) : (
           <EmptyState
             icon={Camera}

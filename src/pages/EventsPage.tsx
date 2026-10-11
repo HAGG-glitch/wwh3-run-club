@@ -83,7 +83,7 @@ function EventCard({ event }: { event: ClubEvent }) {
 
         {run && run.galleryImages.length > 0 ? (
           <div className="mt-5 grid grid-cols-3 gap-2">
-            {run.galleryImages.map((image) => (
+            {run.galleryImages.slice(0, 6).map((image) => (
               <img
                 key={image}
                 src={image}
@@ -100,8 +100,8 @@ function EventCard({ event }: { event: ClubEvent }) {
             asChild
             className="mt-5 h-auto w-full justify-center rounded-sm bg-ink py-3.5 text-[0.74rem] font-black tracking-[0.08em] text-warm-white uppercase hover:bg-charcoal"
           >
-            <Link to={`/runs/${run.slug}`}>
-              View the photographs
+            <Link to="/gallery/photos">
+              View in gallery
               <ArrowRight aria-hidden="true" />
             </Link>
           </Button>

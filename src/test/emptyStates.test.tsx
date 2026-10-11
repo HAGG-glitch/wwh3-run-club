@@ -118,7 +118,7 @@ describe("empty states", () => {
     ).toBeInTheDocument();
   });
 
-  it("links the event through to its photographs", async () => {
+  it("links the event through to the gallery", async () => {
     renderWithRouter(<App />, { initialEntries: ["/gallery/events"] });
 
     await screen.findByRole("heading", {
@@ -126,8 +126,20 @@ describe("empty states", () => {
     });
 
     expect(
-      screen.getByRole("link", { name: /view the photographs/i }),
-    ).toHaveAttribute("href", "/runs/run-away-boy-birthday");
+      screen.getByRole("link", { name: /view in gallery/i }),
+    ).toHaveAttribute("href", "/gallery/photos");
+  });
+
+  it("previews only six photographs on the event card", async () => {
+    const { container } = renderWithRouter(<App />, {
+      initialEntries: ["/gallery/events"],
+    });
+
+    await screen.findByRole("heading", {
+      name: /run away boy's birthday hash/i,
+    });
+
+    expect(container.querySelectorAll("img.h-20")).toHaveLength(6);
   });
 
   it("states that no public documents are available", async () => {

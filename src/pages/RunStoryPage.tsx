@@ -195,9 +195,9 @@ export function RunStoryPage() {
               <ArrowRight aria-hidden="true" className="size-3.5" />
             </Link>
           </div>
-          <StaggerGroup className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2">
             {run.galleryImages.map((image, index) => (
-              <StaggerItem key={`${image}-${index}`} as="figure" className="m-0">
+              <figure key={`${image}-${index}`} className="m-0">
                 <img
                   src={image}
                   alt={`${run.title} — photograph ${index + 1}`}
@@ -209,9 +209,9 @@ export function RunStoryPage() {
                     ? "Demo image · replace with approved club photography"
                     : run.title}
                 </figcaption>
-              </StaggerItem>
+              </figure>
             ))}
-          </StaggerGroup>
+          </div>
         </section>
       )}
 
