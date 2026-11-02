@@ -8,7 +8,9 @@ import {
 
 import { PageTransition } from "@/components/motion/PageTransition";
 import { Toaster } from "@/components/ui/sonner";
+import { ContentProvider } from "@/context/ContentContext";
 import { useHashScroll } from "@/hooks/useHashScroll";
+import { AdminPage } from "@/pages/AdminPage";
 import { CoveragePage } from "@/pages/CoveragePage";
 import { DonorsPage } from "@/pages/DonorsPage";
 import { EventsPage } from "@/pages/EventsPage";
@@ -46,9 +48,11 @@ export default function App() {
   return (
     <>
       <ScrollToTop />
-      <PageTransition>
-        <Routes>
+      <ContentProvider>
+        <PageTransition>
+          <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="/runs" element={<RunsPage />} />
           <Route path="/runs/:slug" element={<RunStoryPage />} />
 
@@ -69,8 +73,9 @@ export default function App() {
           {/* Unknown paths redirect home with a clean URL rather than silently
               rendering the homepage at the wrong address. */}
           <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </PageTransition>
+          </Routes>
+        </PageTransition>
+      </ContentProvider>
 
       <Toaster position="bottom-right" />
     </>

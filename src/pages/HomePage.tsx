@@ -33,13 +33,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { faqItems } from "@/data/faq";
-import { featuredGalleryItems } from "@/data/gallery";
 import { hashTerms } from "@/data/hashTerms";
 import {
-  publishedRuns,
-  hasConfirmedUpcomingRuns,
-  upcomingRuns,
-} from "@/data/runs";
+  selectCompletedRuns,
+  selectFeaturedGallery,
+  selectUpcomingRuns,
+} from "@/data/contentModel";
+import { useContent } from "@/context/useContent";
 import {
   clubStats,
   conductStandards,
@@ -289,6 +289,10 @@ function AboutSection() {
 /* -------------------------------------------------------------------------- */
 
 function NextHashSection() {
+  const { content } = useContent();
+  const upcomingRuns = selectUpcomingRuns(content);
+  const hasConfirmedUpcomingRuns = upcomingRuns.length > 0;
+
   return (
     <section
       id={sectionIds.nextHash}
@@ -540,6 +544,9 @@ function PillarsSection() {
 /* -------------------------------------------------------------------------- */
 
 function RecentRunsSection() {
+  const { content } = useContent();
+  const publishedRuns = selectCompletedRuns(content);
+
   return (
     <section
       id={sectionIds.log}
@@ -624,6 +631,9 @@ function RecentRunsSection() {
 /* -------------------------------------------------------------------------- */
 
 function GalleryPreviewSection() {
+  const { content } = useContent();
+  const featuredGalleryItems = selectFeaturedGallery(content);
+
   return (
     <section
       id={sectionIds.gallery}

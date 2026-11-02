@@ -14,14 +14,19 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  hasConfirmedUpcomingRuns,
-  publishedRuns,
-  upcomingRuns,
-} from "@/data/runs";
+  selectCompletedRuns,
+  selectUpcomingRuns,
+} from "@/data/contentModel";
 import { nextHashPending, siteConfig } from "@/data/siteConfig";
+import { useContent } from "@/context/useContent";
 import { demoLabels } from "@/lib/demoLabels";
 
 export function RunsPage() {
+  const { content } = useContent();
+  const publishedRuns = selectCompletedRuns(content);
+  const upcomingRuns = selectUpcomingRuns(content);
+  const hasConfirmedUpcomingRuns = upcomingRuns.length > 0;
+
   return (
     <main>
       <SiteHeader />

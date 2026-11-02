@@ -162,8 +162,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center justify-self-end gap-5 lg:flex">
-          {/* Hairline rule separates the action button from the link group. */}
-          <span aria-hidden="true" className="h-7 w-px bg-ink/15" />
           <Button
             asChild
             size="lg"

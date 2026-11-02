@@ -60,7 +60,7 @@ describe("main navigation", () => {
     }
   });
 
-  it("separates the action button from the link group", () => {
+  it("links the call to action without exposing the admin route", () => {
     renderWithRouter(<App />, { initialEntries: ["/"] });
 
     const header = screen.getByTestId("site-header");
@@ -68,9 +68,8 @@ describe("main navigation", () => {
 
     expect(action).toHaveAttribute("href", `/#${sectionIds.membership}`);
 
-    // A visible rule, rather than spacing alone, distinguishes the call to
-    // action from ordinary navigation.
-    expect(header.querySelector('[aria-hidden="true"].bg-ink\\/15')).not.toBeNull();
+    // The admin page is reachable only by URL, never from the header.
+    expect(within(header).queryByRole("link", { name: /admin/i })).toBeNull();
   });
 
   it("points in-page destinations at homepage hash routes", () => {

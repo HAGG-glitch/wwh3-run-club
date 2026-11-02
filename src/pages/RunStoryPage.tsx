@@ -17,12 +17,14 @@ import { Reveal } from "@/components/motion/Reveal";
 import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { getRunBySlug } from "@/data/runs";
+import { selectRunBySlug } from "@/data/contentModel";
+import { useContent } from "@/context/useContent";
 import { demoLabels } from "@/lib/demoLabels";
 
 export function RunStoryPage() {
   const { slug } = useParams();
-  const run = getRunBySlug(slug);
+  const { content } = useContent();
+  const run = selectRunBySlug(content, slug);
 
   // Unknown slug -> send the visitor back to the archive rather than rendering
   // an empty page.

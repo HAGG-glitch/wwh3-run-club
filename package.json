@@ -9,10 +9,12 @@
     "preview": "vite preview",
     "lint": "eslint src --max-warnings=0",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "hash-password": "node scripts/hash-password.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
+    "@netlify/blobs": "^11.1.7",
     "@tailwindcss/vite": "^4.3.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -33,6 +35,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
+    "@netlify/vite-plugin": "^3.0.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",

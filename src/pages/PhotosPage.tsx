@@ -23,11 +23,12 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { type GalleryItem } from "@/data/gallery";
 import {
-  displayableGalleryItems,
-  featuredGalleryItems,
-  type GalleryItem,
-} from "@/data/gallery";
+  selectDisplayableGallery,
+  selectFeaturedGallery,
+} from "@/data/contentModel";
+import { useContent } from "@/context/useContent";
 import { gallerySections } from "@/data/navigation";
 import { siteConfig } from "@/data/siteConfig";
 import { usePageMeta } from "@/hooks/usePageMeta";
@@ -86,6 +87,9 @@ function PhotoCaption({ item }: { item: GalleryItem }) {
 export function PhotosPage() {
   const [openItem, setOpenItem] = useState<GalleryItem | null>(null);
   const { pathname } = useLocation();
+  const { content } = useContent();
+  const displayableGalleryItems = selectDisplayableGallery(content);
+  const featuredGalleryItems = selectFeaturedGallery(content);
 
   usePageMeta(
     "Photos",

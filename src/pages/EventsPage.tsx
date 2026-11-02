@@ -11,21 +11,22 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   eventsEmptyState,
-  hasPublishedEvents,
-  publishedEvents,
-  sortEventsByDate,
   type ClubEvent,
 } from "@/data/events";
 import { gallerySections } from "@/data/navigation";
-import { getRunBySlug } from "@/data/runs";
+import {
+  selectPublishedEvents,
+  selectRunBySlug,
+  sortEventsByDate,
+} from "@/data/contentModel";
+import type { HashRun } from "@/data/runs";
 import { sectionIds, siteConfig } from "@/data/siteConfig";
+import { useContent } from "@/context/useContent";
 import { usePageMeta } from "@/hooks/usePageMeta";
 import { demoLabels } from "@/lib/demoLabels";
 
 /** One event card. Renders a registration link only when one exists. */
-function EventCard({ event }: { event: ClubEvent }) {
-  const run = event.runSlug ? getRunBySlug(event.runSlug) : undefined;
-
+function EventCard({ event, run }: { event: ClubEvent; run?: HashRun }) {
   return (
     <article className="flex h-full flex-col border border-ink/15 bg-pure-white">
       {event.coverImage ? (
@@ -133,13 +134,15 @@ function EventCard({ event }: { event: ClubEvent }) {
  */
 export function EventsPage() {
   const { pathname } = useLocation();
+  const { content } = useContent();
 
   usePageMeta(
     "Events",
     `Confirmed ${siteConfig.identity.name} events with dates, times and locations. Listed only once details are confirmed by the club.`,
   );
 
-  const events = sortEventsByDate(publishedEvents);
+  const events = sortEventsByDate(selectPublishedEvents(content));
+  const hasPublishedEvents = events.length > 0;
 
   return (
     <main>
@@ -165,7 +168,14 @@ export function EventsPage() {
           <StaggerGroup className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {events.map((event) => (
               <StaggerItem key={event.id}>
-                <EventCard event={event} />
+                <EventCard
+                  event={event}
+                  run={
+                    event.runSlug
+                      ? selectRunBySlug(content, event.runSlug)
+                      : undefined
+                  }
+                />
               </StaggerItem>
             ))}
           </StaggerGroup>
