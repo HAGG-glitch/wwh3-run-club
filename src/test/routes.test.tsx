@@ -124,6 +124,24 @@ describe("membership routes", () => {
       expect(screen.getByRole("heading", { name: step })).toBeInTheDocument();
     }
   });
+
+  it("publishes the registration fee and Orange Money receipt details", async () => {
+    renderWithRouter(<App />, { initialEntries: ["/membership"] });
+
+    await screen.findByRole("heading", { level: 1 });
+
+    const text = document.body.textContent ?? "";
+    expect(text).toContain("Le 150");
+    expect(text).toContain("Orange Money");
+    expect(text).toContain("288659");
+    expect(text).toContain("+232 71 181352");
+
+    const receiptLink = screen.getByRole("link", {
+      name: "+232 71 181352",
+    });
+    expect(receiptLink).toHaveAttribute("href", "https://wa.me/23271181352");
+    expect(receiptLink).toHaveAttribute("rel", expect.stringContaining("noopener"));
+  });
 });
 
 describe("routing behaviour", () => {

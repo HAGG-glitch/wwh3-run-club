@@ -1,3 +1,5 @@
+import { registrationFee } from "@/data/membership";
+
 export type FaqItem = {
   id: string;
   question: string;
@@ -64,7 +66,7 @@ export const faqItems: readonly FaqItem[] = [
     id: "faq-membership",
     question: "How does membership work?",
     answer:
-      "Attend a Hash as a guest, complete three runs, receive an endorsement from an existing member, and have your application reviewed by WWH3. Approved members pay the applicable fees and are then formally welcomed into the fellowship. An application does not guarantee membership.",
+      `Attend a Hash as a guest, complete three runs, receive an endorsement from an existing member, and have your application reviewed by WWH3. Approved members pay the ${registrationFee.display} registration fee by ${registrationFee.paymentMethod} (merchant code ${registrationFee.merchantCode}), send the receipt to ${registrationFee.receiptPhoneDisplay} on WhatsApp, and are then formally welcomed into the fellowship. An application does not guarantee membership.`,
   },
   {
     id: "faq-contact",

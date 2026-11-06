@@ -14,6 +14,7 @@ import {
   futureCoverage,
   membershipNotes,
   membershipSteps,
+  registrationFee,
 } from "@/data/membership";
 import { membershipSections } from "@/data/navigation";
 import { siteConfig } from "@/data/siteConfig";
@@ -104,6 +105,63 @@ export function MembershipPage() {
         </ol>
 
         <Reveal className="mt-12">
+          <div className="grid gap-6 border border-warm-white/15 bg-warm-white/5 p-6 sm:p-8 lg:grid-cols-[.75fr_1.25fr] lg:gap-10">
+            <div>
+              <span className="text-[0.66rem] font-black tracking-[0.12em] text-gold-bright uppercase">
+                Registration fee
+              </span>
+              <p className="editorial-display mt-3 mb-0 text-[clamp(2rem,4vw,3.4rem)] leading-none text-warm-white">
+                {registrationFee.display}
+              </p>
+              <p className="mt-3 mb-0 max-w-xs text-sm leading-relaxed text-warm-white/65">
+                Payable once your application has been approved.
+              </p>
+            </div>
+
+            <div>
+              <p className="m-0 text-sm leading-relaxed text-warm-white/80">
+                Pay by {registrationFee.paymentMethod} to the merchant code
+                below, then send your receipt to the club on WhatsApp.
+              </p>
+              <dl className="m-0 mt-5 grid gap-4 sm:grid-cols-2">
+                <div>
+                  <dt className="text-[0.62rem] font-black tracking-[0.1em] text-warm-white/55 uppercase">
+                    Payment method
+                  </dt>
+                  <dd className="mt-1 text-[0.95rem] font-bold tracking-[0.03em] text-warm-white uppercase">
+                    {registrationFee.paymentMethod}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-[0.62rem] font-black tracking-[0.1em] text-warm-white/55 uppercase">
+                    Merchant code
+                  </dt>
+                  <dd className="mt-1 text-[0.95rem] font-black tracking-[0.08em] text-gold-bright">
+                    {registrationFee.merchantCode}
+                  </dd>
+                </div>
+                <div className="sm:col-span-2">
+                  <dt className="text-[0.62rem] font-black tracking-[0.1em] text-warm-white/55 uppercase">
+                    Send the receipt to
+                  </dt>
+                  <dd className="mt-1 text-[0.95rem] font-bold tracking-[0.03em] text-warm-white">
+                    <a
+                      href={registrationFee.receiptPhoneHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline decoration-gold-bright/60 underline-offset-4 transition-colors hover:text-gold-bright"
+                    >
+                      {registrationFee.receiptPhoneDisplay}
+                    </a>{" "}
+                    on WhatsApp
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal className="mt-8">
           <Button
             asChild
             className="h-auto rounded-sm bg-gold-bright px-6 py-4 text-[0.78rem] font-black tracking-[0.08em] text-ink uppercase hover:bg-warm-white"

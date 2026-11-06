@@ -15,6 +15,17 @@ import { siteConfig } from "@/data/siteConfig";
 /* Membership process                                                         */
 /* -------------------------------------------------------------------------- */
 
+/** Confirmed membership registration fee and how approved applicants pay it. */
+export const registrationFee = {
+  amount: 150,
+  currency: "SLE",
+  display: "Le 150",
+  paymentMethod: "Orange Money",
+  merchantCode: "288659",
+  receiptPhoneDisplay: "+232 71 181352",
+  receiptPhoneHref: "https://wa.me/23271181352",
+} as const;
+
 /** The public membership process, in order. */
 export const membershipSteps = [
   {
@@ -40,7 +51,7 @@ export const membershipSteps = [
   {
     step: "05",
     title: "Pay applicable fees",
-    text: "An approved applicant pays the applicable fees.",
+    text: `An approved applicant pays the ${registrationFee.display} registration fee by ${registrationFee.paymentMethod}, then sends the receipt to the club.`,
   },
   {
     step: "06",
