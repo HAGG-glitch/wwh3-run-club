@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { ArrowRight, CalendarDays } from "lucide-react";
 
+import { Media } from "@/components/Media";
 import { EmptyState, PageHero } from "@/components/PageHero";
 import { SectionSubnav } from "@/components/SectionSubnav";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -85,7 +86,7 @@ function EventCard({ event, run }: { event: ClubEvent; run?: HashRun }) {
         {run && run.galleryImages.length > 0 ? (
           <div className="mt-5 grid grid-cols-3 gap-2">
             {run.galleryImages.slice(0, 6).map((image) => (
-              <img
+              <Media
                 key={image}
                 src={image}
                 alt=""

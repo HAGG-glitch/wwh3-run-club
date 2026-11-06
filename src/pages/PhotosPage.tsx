@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Camera, Expand } from "lucide-react";
 
+import { Media } from "@/components/Media";
 import { EmptyState, PageHero } from "@/components/PageHero";
 import { SectionSubnav } from "@/components/SectionSubnav";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -65,7 +66,7 @@ function PhotoCaption({ item }: { item: GalleryItem }) {
       )}
       {item.isDemo && (
         <span className="mt-1 block text-[0.62rem] text-warm-white/45">
-          Demo photograph
+          Demo media
         </span>
       )}
     </>
@@ -148,11 +149,10 @@ export function PhotosPage() {
                 {featuredGalleryItems.map((item) => (
                   <CarouselItem key={`featured-${item.id}`} className="md:basis-1/2 lg:basis-1/3">
                     <figure className="group relative m-0 overflow-hidden bg-charcoal">
-                      <img
+                      <Media
                         src={item.image}
                         alt={item.alt}
                         loading="lazy"
-                        decoding="async"
                         width={item.width}
                         height={item.height}
                         className="h-[22rem] w-full object-cover sm:h-[26rem]"
@@ -180,16 +180,15 @@ export function PhotosPage() {
                 <button
                   type="button"
                   onClick={() => setOpenItem(item)}
-                  aria-label={`Enlarge photograph: ${item.caption}`}
+                  aria-label={`Enlarge media: ${item.caption}`}
                   className="group relative block h-full w-full cursor-zoom-in overflow-hidden bg-charcoal text-left"
                 >
                       {/* width/height let the browser reserve the tile before the
                           JPEG arrives, so the grid does not reflow as it loads. */}
-                      <img
+                      <Media
                         src={item.image}
                         alt={item.alt}
                         loading="lazy"
-                        decoding="async"
                         width={item.width}
                         height={item.height}
                         className="h-[17rem] w-full object-cover opacity-100 transition-[transform,opacity] duration-700 ease-[cubic-bezier(.22,1,.36,1)] motion-safe:group-hover:scale-105 motion-safe:group-hover:opacity-85"
@@ -223,8 +222,8 @@ export function PhotosPage() {
         ) : (
           <EmptyState
             icon={Camera}
-            heading="No photographs have been published yet."
-            body="Approved photographs from completed runs will appear here once consent has been confirmed."
+            heading="No photos or videos have been published yet."
+            body="Approved media from completed runs will appear here once consent has been confirmed."
           />
         )}
       </section>
@@ -258,7 +257,7 @@ export function PhotosPage() {
         </Reveal>
       </section>
 
-      {/* Enlarged photograph. Radix Dialog traps focus, closes on Escape and
+      {/* Enlarged media. Radix Dialog traps focus, closes on Escape and
           restores focus to the tile that opened it. */}
       <Dialog
         open={openItem !== null}
@@ -280,7 +279,7 @@ export function PhotosPage() {
           </DialogDescription>
 
           {openItem && (
-            <img
+            <Media
               src={openItem.image}
               alt={openItem.alt}
               width={openItem.width}
@@ -288,7 +287,7 @@ export function PhotosPage() {
               /* The lightbox is the one place the full file is wanted, so it is
                  fetched eagerly rather than deferred until the grid loads. */
               loading="eager"
-              decoding="async"
+              controls
               className="max-h-[52vh] w-full object-contain"
             />
           )}

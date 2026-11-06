@@ -11,13 +11,14 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { Media } from "@/components/Media";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Reveal } from "@/components/motion/Reveal";
 import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { selectRunBySlug } from "@/data/contentModel";
+import { limitRunMedia, selectRunBySlug } from "@/data/contentModel";
 import { useContent } from "@/context/useContent";
 import { demoLabels } from "@/lib/demoLabels";
 
@@ -29,6 +30,8 @@ export function RunStoryPage() {
   // Unknown slug -> send the visitor back to the archive rather than rendering
   // an empty page.
   if (!run) return <Navigate to="/runs" replace />;
+
+  const runMedia = limitRunMedia(run.galleryImages);
 
   /* Built from whatever this run actually has. Optional fields are skipped
      rather than rendered as "null" or an empty rule. */
@@ -179,15 +182,15 @@ export function RunStoryPage() {
 
       {/* Every image comes from this run's own galleryImages — never a shared
           hardcoded file. */}
-      {run.galleryImages.length > 0 && (
+      {runMedia.length > 0 && (
         <section
-          aria-label="Photographs from this run"
+          aria-label="Photos and video from this run"
           className="bg-pure-white px-5 pb-20 sm:px-[7vw] sm:pb-28"
         >
           <Separator className="mb-8 bg-ink/15" />
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <h2 className="m-0 text-[0.7rem] font-black tracking-[0.14em] uppercase">
-              Photographs from this run
+              Photos &amp; video from this run
             </h2>
             <Link
               to="/gallery/photos"
@@ -197,18 +200,25 @@ export function RunStoryPage() {
               <ArrowRight aria-hidden="true" className="size-3.5" />
             </Link>
           </div>
+          {run.galleryImages.length > runMedia.length ? (
+            <p className="m-0 mb-5 text-[0.68rem] font-bold tracking-[0.08em] text-muted-gray uppercase">
+              Showing the first {runMedia.length} of{" "}
+              {run.galleryImages.length} items.
+            </p>
+          ) : null}
           <div className="grid gap-5 sm:grid-cols-2">
-            {run.galleryImages.map((image, index) => (
-              <figure key={`${image}-${index}`} className="m-0">
-                <img
-                  src={image}
-                  alt={`${run.title} — photograph ${index + 1}`}
+            {runMedia.map((item, index) => (
+              <figure key={`${item}-${index}`} className="m-0">
+                <Media
+                  src={item}
+                  alt={`${run.title} — media ${index + 1}`}
                   loading="lazy"
+                  controls
                   className="h-[22rem] w-full object-cover sm:h-[28rem]"
                 />
                 <figcaption className="pt-3 text-[0.66rem] font-bold tracking-[0.08em] text-muted-gray uppercase">
                   {run.isDemo
-                    ? "Demo image · replace with approved club photography"
+                    ? "Demo media · replace with approved club photography"
                     : run.title}
                 </figcaption>
               </figure>

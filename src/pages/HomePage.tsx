@@ -15,6 +15,7 @@ import {
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { JoinForm } from "@/components/JoinForm";
+import { Media } from "@/components/Media";
 import { Reveal, InView } from "@/components/motion/Reveal";
 import { StaggerGroup, StaggerItem } from "@/components/motion/StaggerGroup";
 import {
@@ -670,7 +671,7 @@ function GalleryPreviewSection() {
               index % 2 === 1 && "sm:mt-16",
             )}
           >
-            <img
+            <Media
               src={item.image}
               alt={item.alt}
               loading="lazy"

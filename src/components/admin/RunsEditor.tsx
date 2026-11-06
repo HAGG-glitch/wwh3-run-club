@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import type { HashRun, RunStatus } from "@/data/runs";
-import { slugify } from "@/data/contentModel";
+import { MAX_RUN_MEDIA, slugify } from "@/data/contentModel";
 import { cn } from "@/lib/utils";
 
 import { blankRun } from "./factories";
@@ -233,8 +233,9 @@ export function RunsEditor({
           />
 
           <MultiImageField
-            label="Run photographs"
+            label="Run photos & videos"
             values={selected.galleryImages}
+            max={MAX_RUN_MEDIA}
             onChange={(urls) => patch({ galleryImages: urls })}
           />
         </Panel>

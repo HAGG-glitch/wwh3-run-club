@@ -142,7 +142,7 @@ describe("the constitution is published", () => {
 });
 
 describe("gallery dialog", () => {
-  it("opens a labelled dialog describing the photograph", async () => {
+  it("opens a labelled dialog describing the media", async () => {
     const user = userEvent.setup();
     renderWithRouter(<App />, { initialEntries: ["/gallery/photos"] });
 
@@ -152,7 +152,7 @@ describe("gallery dialog", () => {
     });
 
     const trigger = screen.getAllByRole("button", {
-      name: /enlarge photograph/i,
+      name: /enlarge media/i,
     })[0]!;
     await user.click(trigger);
 

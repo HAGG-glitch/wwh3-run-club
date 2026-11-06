@@ -1,6 +1,9 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import { Media } from "@/components/Media";
 import type { GalleryCategory, GalleryItem } from "@/data/gallery";
+import { MAX_UPLOAD_BATCH, uploadMedia } from "@/lib/adminApi";
+import { isMediaFile } from "@/lib/media";
 import { cn } from "@/lib/utils";
 
 import { blankGalleryItem } from "./factories";
@@ -34,7 +37,19 @@ export function GalleryEditor({
   const [selectedId, setSelectedId] = useState<string | null>(
     gallery[0]?.id ?? null,
   );
+  const [bulkBusy, setBulkBusy] = useState(false);
+  const [bulkProgress, setBulkProgress] = useState<{
+    completed: number;
+    total: number;
+  } | null>(null);
+  const [bulkError, setBulkError] = useState<string | null>(null);
+  const bulkInputRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef(gallery);
   const selected = gallery.find((item) => item.id === selectedId) ?? null;
+
+  useEffect(() => {
+    galleryRef.current = gallery;
+  }, [gallery]);
 
   const patch = (changes: Partial<GalleryItem>) => {
     if (!selected) return;
@@ -57,21 +72,105 @@ export function GalleryEditor({
     if (selectedId === id) setSelectedId(next[0]?.id ?? null);
   };
 
+  const bulkUpload = async (fileList: FileList | null) => {
+    if (!fileList || fileList.length === 0) return;
+
+    const files = Array.from(fileList).filter(isMediaFile);
+    if (files.length === 0) {
+      setBulkError("Choose one or more image or video files.");
+      if (bulkInputRef.current) bulkInputRef.current.value = "";
+      return;
+    }
+
+    const chosen = files.slice(0, MAX_UPLOAD_BATCH);
+    let notice =
+      files.length > MAX_UPLOAD_BATCH
+        ? `Only ${MAX_UPLOAD_BATCH} items can be uploaded at once, so the first ${chosen.length} will be added.`
+        : null;
+
+    setBulkBusy(true);
+    setBulkProgress({ completed: 0, total: chosen.length });
+    setBulkError(notice);
+
+    try {
+      const { media, errors } = await uploadMedia(chosen, (completed, total) =>
+        setBulkProgress({ completed, total }),
+      );
+
+      const items = media.map((item) => ({
+        ...blankGalleryItem(),
+        image: item.url,
+        width: item.width,
+        height: item.height,
+      }));
+
+      if (items.length > 0) {
+        onChange([...items, ...galleryRef.current]);
+        setSelectedId(items[0].id);
+      }
+
+      if (errors.length > 0) {
+        notice = [
+          notice,
+          `${errors.length} upload${errors.length === 1 ? "" : "s"} failed: ${errors[0]}`,
+        ]
+          .filter(Boolean)
+          .join(" ");
+      }
+      setBulkError(notice);
+    } finally {
+      setBulkBusy(false);
+      setBulkProgress(null);
+      if (bulkInputRef.current) bulkInputRef.current.value = "";
+    }
+  };
+
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,18rem)_1fr]">
       <div className="border border-ink/15 bg-warm-white">
         <div className="flex items-center justify-between border-b border-ink/15 px-3 py-2.5">
           <h2 className="m-0 text-[0.72rem] font-black tracking-[0.1em] uppercase">
-            Photos ({gallery.length})
+            Media ({gallery.length})
           </h2>
-          <button
-            type="button"
-            onClick={add}
-            className="rounded-sm bg-ink px-3 py-1.5 text-[0.62rem] font-black tracking-[0.08em] text-warm-white uppercase hover:bg-charcoal"
-          >
-            + Add
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => bulkInputRef.current?.click()}
+              disabled={bulkBusy}
+              className="rounded-sm border border-ink/25 px-3 py-1.5 text-[0.62rem] font-black tracking-[0.08em] text-ink uppercase hover:border-gold-deep hover:bg-gold-bright/20 disabled:opacity-50"
+            >
+              {bulkBusy ? "Uploading…" : "+ Upload"}
+            </button>
+            <button
+              type="button"
+              onClick={add}
+              disabled={bulkBusy}
+              className="rounded-sm bg-ink px-3 py-1.5 text-[0.62rem] font-black tracking-[0.08em] text-warm-white uppercase hover:bg-charcoal disabled:opacity-50"
+            >
+              + Add
+            </button>
+            <input
+              ref={bulkInputRef}
+              type="file"
+              accept="image/*,video/*"
+              multiple
+              className="sr-only"
+              onChange={(event) => {
+                void bulkUpload(event.target.files);
+              }}
+            />
+          </div>
         </div>
+        {bulkBusy && bulkProgress ? (
+          <p className="m-0 border-b border-ink/15 px-3 py-2 text-[0.68rem] font-semibold tracking-[0.06em] text-muted-gray uppercase">
+            Uploading {bulkProgress.completed}/{bulkProgress.total}…
+          </p>
+        ) : null}
+        {bulkError ? (
+          <p className="m-0 border-b border-ink/15 px-3 py-2 text-[0.72rem] font-semibold text-red-600">
+            {bulkError}
+          </p>
+        ) : null}
         <ul className="m-0 max-h-[32rem] list-none overflow-y-auto p-0">
           {gallery.map((item) => (
             <li
@@ -87,7 +186,7 @@ export function GalleryEditor({
                 )}
               >
                 {item.image ? (
-                  <img
+                  <Media
                     src={item.image}
                     alt=""
                     className="h-10 w-10 shrink-0 border border-ink/15 object-cover"
@@ -97,7 +196,7 @@ export function GalleryEditor({
                 )}
                 <span className="min-w-0">
                   <span className="block truncate text-[0.78rem] font-semibold">
-                    {item.caption || item.alt || "Untitled photo"}
+                    {item.caption || item.alt || "Untitled media"}
                   </span>
                   <span className="block text-[0.6rem] tracking-[0.06em] text-muted-gray uppercase">
                     {item.category}
@@ -107,9 +206,10 @@ export function GalleryEditor({
               </button>
               <button
                 type="button"
-                aria-label={`Delete ${item.caption || item.alt || "photo"}`}
+                aria-label={`Delete ${item.caption || item.alt || "media"}`}
                 onClick={() => remove(item.id)}
-                className="px-3 text-lg leading-none text-red-600 hover:text-red-800"
+                disabled={bulkBusy}
+                className="px-3 text-lg leading-none text-red-600 hover:text-red-800 disabled:opacity-50"
               >
                 ×
               </button>
@@ -117,7 +217,7 @@ export function GalleryEditor({
           ))}
           {gallery.length === 0 ? (
             <li className="px-3 py-4 text-[0.8rem] text-muted-gray">
-              No photos yet.
+              No media yet.
             </li>
           ) : null}
         </ul>
@@ -125,7 +225,7 @@ export function GalleryEditor({
 
       {selected ? (
         <Panel
-          title={`Editing: ${selected.caption || selected.alt || "Untitled photo"}`}
+          title={`Editing: ${selected.caption || selected.alt || "Untitled media"}`}
           actions={
             <Checkbox
               label="Published"
@@ -135,8 +235,9 @@ export function GalleryEditor({
           }
         >
           <ImageField
-            label="Photograph"
+            label="Photograph or video"
             value={selected.image}
+            allowVideo
             onChange={(url, width, height) =>
               patch({
                 image: url,
@@ -147,7 +248,7 @@ export function GalleryEditor({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <Field
-              label="Alt text (describe the photo)"
+              label="Alt text (describe the photo or video)"
               value={selected.alt}
               onChange={(value) => patch({ alt: value })}
             />
@@ -197,7 +298,7 @@ export function GalleryEditor({
 
           <div className="flex flex-col gap-2 border-t border-ink/10 pt-3">
             <Checkbox
-              label="Consent confirmed by everyone in this photo"
+              label="Consent confirmed by everyone in this photo or video"
               checked={selected.consentConfirmed}
               onChange={(checked) => patch({ consentConfirmed: checked })}
             />
@@ -208,7 +309,7 @@ export function GalleryEditor({
             />
             {!selected.consentConfirmed ? (
               <p className="m-0 text-[0.72rem] font-semibold text-red-700">
-                Without consent confirmation this photo stays hidden, even if it
+                Without consent confirmation this media stays hidden, even if it
                 is marked published.
               </p>
             ) : null}
@@ -216,7 +317,7 @@ export function GalleryEditor({
         </Panel>
       ) : (
         <div className="border border-dashed border-ink/25 p-8 text-center text-[0.85rem] text-muted-gray">
-          Select a photo to edit it, or add a new one.
+          Select an item to edit it, or add a new one.
         </div>
       )}
     </div>

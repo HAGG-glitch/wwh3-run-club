@@ -3,8 +3,9 @@ import crypto from "node:crypto";
 import { headersToRecord, isAuthenticated, jsonResponse } from "../lib/auth";
 
 /**
- * Returns a short-lived signature so the browser can upload a photo straight to
- * Cloudinary without ever seeing the API secret. The secret stays server-side.
+ * Returns a short-lived signature so the browser can upload a photo or video
+ * straight to Cloudinary without ever seeing the API secret. The secret stays
+ * server-side.
  */
 export default async (request: Request) => {
   if (request.method !== "GET") {

@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import {
   buildSeedContent,
+  limitRunMedia,
+  MAX_RUN_MEDIA,
   normaliseContent,
   selectDisplayableGallery,
   selectFeaturedGallery,
@@ -94,6 +96,17 @@ describe("content model", () => {
     const displayable = selectDisplayableGallery(seed);
     expect(selectFeaturedGallery(seed)).toEqual(displayable.slice(0, 5));
     expect(selectFeaturedGallery(seed).length).toBeLessThanOrEqual(5);
+  });
+
+  it("caps a run story at the first fifteen items", () => {
+    const items = Array.from(
+      { length: MAX_RUN_MEDIA + 5 },
+      (_, index) => `/gallery_photos/photo-${index}.jpg`,
+    );
+
+    expect(limitRunMedia(items)).toHaveLength(MAX_RUN_MEDIA);
+    expect(limitRunMedia(items)).toEqual(items.slice(0, MAX_RUN_MEDIA));
+    expect(limitRunMedia(items.slice(0, 3))).toHaveLength(3);
   });
 
   it("slugifies titles and keeps a fallback", () => {

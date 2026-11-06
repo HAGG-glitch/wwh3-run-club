@@ -1,12 +1,26 @@
 import { normaliseContent, type SiteContent } from "@/data/contentModel";
+import { isVideoFile } from "@/lib/media";
 
 export type LoginResult = { ok: true } | { ok: false; error: string };
 
-export type CloudinaryImage = {
+export type MediaKind = "image" | "video";
+
+export type CloudinaryMedia = {
   publicId: string;
   url: string;
   width: number;
   height: number;
+  kind: MediaKind;
+};
+
+/** A single batch is small enough for a phone to finish in one go. */
+export const MAX_UPLOAD_BATCH = 15;
+
+const UPLOAD_CONCURRENCY = 3;
+
+export type UploadBatchResult = {
+  media: CloudinaryMedia[];
+  errors: string[];
 };
 
 async function readError(response: Response, fallback: string): Promise<string> {
@@ -85,16 +99,25 @@ export async function saveContent(
   return (await response.json()) as { version: number; updatedAt: string };
 }
 
-function withTransformations(url: string): string {
+function withTransformations(url: string, kind: MediaKind): string {
+  if (kind === "video") {
+    /* Keep the original video codec; only ask Cloudinary for a sensible
+       quality/bitrate. The browser streams the file instead of downloading it. */
+    return url.replace("/upload/", "/upload/q_auto/");
+  }
+
   /* f_auto/q_auto lets Cloudinary serve WebP/AVIF at a sensible quality; the
      width cap keeps a phone from downloading a 4000px original. */
-  return url.replace(
-    "/upload/",
-    "/upload/f_auto,q_auto,w_1600,c_limit/",
-  );
+  return url.replace("/upload/", "/upload/f_auto,q_auto,w_1600,c_limit/");
 }
 
-export async function uploadImage(file: File): Promise<CloudinaryImage> {
+async function getUploadSignature(): Promise<{
+  cloudName: string;
+  apiKey: string;
+  timestamp: number;
+  folder: string;
+  signature: string;
+}> {
   const signatureResponse = await fetch("/api/cloudinary-sign", {
     credentials: "include",
     cache: "no-store",
@@ -104,14 +127,18 @@ export async function uploadImage(file: File): Promise<CloudinaryImage> {
       await readError(signatureResponse, "Could not prepare the upload."),
     );
   }
-
-  const signature = (await signatureResponse.json()) as {
+  return (await signatureResponse.json()) as {
     cloudName: string;
     apiKey: string;
     timestamp: number;
     folder: string;
     signature: string;
   };
+}
+
+export async function uploadMediaFile(file: File): Promise<CloudinaryMedia> {
+  const signature = await getUploadSignature();
+  const kind: MediaKind = isVideoFile(file) ? "video" : "image";
 
   const form = new FormData();
   form.append("file", file);
@@ -121,7 +148,7 @@ export async function uploadImage(file: File): Promise<CloudinaryImage> {
   form.append("signature", signature.signature);
 
   const uploadResponse = await fetch(
-    `https://api.cloudinary.com/v1_1/${signature.cloudName}/image/upload`,
+    `https://api.cloudinary.com/v1_1/${signature.cloudName}/${kind}/upload`,
     { method: "POST", body: form },
   );
 
@@ -147,8 +174,62 @@ export async function uploadImage(file: File): Promise<CloudinaryImage> {
 
   return {
     publicId: data.public_id,
-    url: withTransformations(data.secure_url),
+    url: withTransformations(data.secure_url, kind),
     width: data.width,
     height: data.height,
+    kind,
+  };
+}
+
+export async function uploadImage(file: File): Promise<CloudinaryMedia> {
+  return uploadMediaFile(file);
+}
+
+/**
+ * Uploads several photos/videos with a small amount of concurrency and reports
+ * how many have finished. A failed file does not stop the rest of the batch.
+ */
+export async function uploadMedia(
+  files: readonly File[],
+  onProgress?: (completed: number, total: number) => void,
+): Promise<UploadBatchResult> {
+  const results: Array<CloudinaryMedia | null> = new Array(files.length).fill(
+    null,
+  );
+  const errors: string[] = [];
+  let next = 0;
+  let completed = 0;
+
+  const worker = async () => {
+    for (;;) {
+      const index = next;
+      next += 1;
+      if (index >= files.length) return;
+
+      try {
+        results[index] = await uploadMediaFile(files[index]);
+      } catch (cause) {
+        errors.push(
+          cause instanceof Error ? cause.message : "Upload failed.",
+        );
+      } finally {
+        completed += 1;
+        onProgress?.(completed, files.length);
+      }
+    }
+  };
+
+  await Promise.all(
+    Array.from(
+      { length: Math.min(UPLOAD_CONCURRENCY, files.length) },
+      () => worker(),
+    ),
+  );
+
+  return {
+    media: results.filter(
+      (media): media is CloudinaryMedia => media !== null,
+    ),
+    errors,
   };
 }

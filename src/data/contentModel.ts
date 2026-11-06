@@ -83,6 +83,13 @@ export function selectRunBySlug(
   return content.runs.find((run) => run.published && run.slug === slug);
 }
 
+/** Each run story is a curated set, so uploads and display share one cap. */
+export const MAX_RUN_MEDIA = 15;
+
+export function limitRunMedia(items: readonly string[]): string[] {
+  return items.slice(0, MAX_RUN_MEDIA);
+}
+
 export function selectPublishedEvents(content: SiteContent): ClubEvent[] {
   return content.events.filter((event) => event.published);
 }
